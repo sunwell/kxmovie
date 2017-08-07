@@ -29,14 +29,12 @@
         self.tabBarItem = [[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemFeatured tag: 0];
         
         _remoteMovies = @[
-
-//            @"http://eric.cast.ro/stream2.flv",
-//            @"http://liveipad.wasu.cn/cctv2_ipad/z.m3u8",
-            @"http://www.wowza.com/_h264/BigBuckBunny_175k.mov",
-            // @"http://www.wowza.com/_h264/BigBuckBunny_115k.mov",
-            @"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov",
-            @"http://santai.tv/vod/test/test_format_1.3gp",
-            @"http://santai.tv/vod/test/test_format_1.mp4",
+                          
+            @"http://gifs.51gif.com/20170325/video/17a2edb3369e4f2889f1dc097a86105a.mp4",
+             @"http://gifs.51gif.com/20170524/video/9062711.mp4",
+//            @"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov",
+            @"http://gifs.51gif.com/20161202/video/2508584.mp4",
+            @"http://gifs.51gif.com/20161202/video/2531892.mp4",
         
             //@"rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov",
             //@"http://santai.tv/vod/test/BigBuckBunny_175k.mov",
@@ -244,7 +242,7 @@
     [self presentViewController:vc animated:YES completion:nil];
     //[self.navigationController pushViewController:vc animated:YES];    
 
-    LoggerApp(1, @"Playing a movie: %@", path);
+//    LoggerApp(1, @"Playing a movie: %@", path);
 }
 
 @end
