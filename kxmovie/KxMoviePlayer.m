@@ -101,8 +101,72 @@ static NSMutableDictionary * gHistory;
     NSDictionary        *_parameters;
 }
 
+@property (readwrite) BOOL playing;
+@property (readwrite) BOOL decoding;
+
 @end
 
 @implementation KxMoviePlayer
+
++ (void)initialize {
+    if (!gHistory)
+        gHistory = [NSMutableDictionary dictionary];
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
++ (id) moviePlayerWithContentPath: (NSString *) path
+                       parameters: (NSDictionary *) parameters {
+    return [[KxMoviePlayer alloc] initWithContentPath: path parameters: parameters];
+}
+
+- (id) initWithContentPath: (NSString *) path
+                parameters: (NSDictionary *) parameters {
+    NSAssert(path.length > 0, @"empty path");
+    
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        
+        _moviePosition = 0;
+        _parameters = parameters;
+        
+        __weak KxMovieViewController *weakSelf = self;
+        
+        KxMovieDecoder *decoder = [[KxMovieDecoder alloc] init];
+        
+        decoder.interruptCallback = ^BOOL(){
+            __strong KxMovieViewController *strongSelf = weakSelf;
+            return strongSelf ? [strongSelf interruptDecoder] : YES;
+        };
+        
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            
+            NSError *error = nil;
+            [decoder openFile:path error:&error];
+            
+            __strong KxMovieViewController *strongSelf = weakSelf;
+            if (strongSelf) {
+                
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    [strongSelf setMovieDecoder:decoder withError:error];
+                });
+            }
+        });
+    }
+    return self;
+}
+
+- (void) dealloc {
+    [self pause];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    if (_dispatchQueue) {
+        // Not needed as of ARC.
+        _dispatchQueue = NULL;
+    }
+}
 
 @end
