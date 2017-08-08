@@ -18,7 +18,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 NSString * kxmovieErrorDomain = @"ru.kolyvan.kxmovie";
-static void FFLog(void* context, int level, const char* format, va_list args);
+//static void FFLog(void* context, int level, const char* format, va_list args);
 
 static NSError * kxmovieError (NSInteger code, id info)
 {
@@ -489,7 +489,7 @@ static int interrupt_callback(void *ctx);
 
 + (void)initialize
 {
-    av_log_set_callback(FFLog);
+//    av_log_set_callback(FFLog);
     av_register_all();
     avformat_network_init();
 }
@@ -648,11 +648,8 @@ static int interrupt_callback(void *ctx);
     return kxMovieErrorNone;
 }
 
--(void) closeFile
-{
-//    [self closeAudioStream];
+-(void) closeFile {
     [self closeVideoStream];
-//    [self closeSubtitleStream];
     
     _videoStreams = nil;
     
@@ -864,7 +861,6 @@ static int interrupt_callback(void *ctx);
                                                 &packet);
                 
                 if (len < 0) {
-//                    LoggerVideo(0, @"decode video error, skip packet");
                     break;
                 }
                 
@@ -918,127 +914,5 @@ static int interrupt_callback(void *ctx)
     const BOOL r = [p interruptDecoder];
 //    if (r) LoggerStream(1, @"DEBUG: INTERRUPT_CALLBACK!");
     return r;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-
-@implementation KxMovieSubtitleASSParser
-
-+ (NSArray *) parseEvents: (NSString *) events
-{
-    NSRange r = [events rangeOfString:@"[Events]"];
-    if (r.location != NSNotFound) {
-        
-        NSUInteger pos = r.location + r.length;
-        
-        r = [events rangeOfString:@"Format:"
-                          options:0
-                            range:NSMakeRange(pos, events.length - pos)];
-        
-        if (r.location != NSNotFound) {
-            
-            pos = r.location + r.length;
-            r = [events rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]
-                                        options:0
-                                          range:NSMakeRange(pos, events.length - pos)];
-            
-            if (r.location != NSNotFound) {
-                
-                NSString *format = [events substringWithRange:NSMakeRange(pos, r.location - pos)];
-                NSArray *fields = [format componentsSeparatedByString:@","];
-                if (fields.count > 0) {
-                    
-                    NSCharacterSet *ws = [NSCharacterSet whitespaceCharacterSet];
-                    NSMutableArray *ma = [NSMutableArray array];
-                    for (NSString *s in fields) {
-                        [ma addObject:[s stringByTrimmingCharactersInSet:ws]];
-                    }
-                    return ma;
-                }
-            }
-        }
-    }
-    
-    return nil;
-}
-
-+ (NSArray *) parseDialogue: (NSString *) dialogue
-                  numFields: (NSUInteger) numFields
-{
-    if ([dialogue hasPrefix:@"Dialogue:"]) {
-        
-        NSMutableArray *ma = [NSMutableArray array];
-        
-        NSRange r = {@"Dialogue:".length, 0};
-        NSUInteger n = 0;
-        
-        while (r.location != NSNotFound && n++ < numFields) {
-            
-            const NSUInteger pos = r.location + r.length;
-            
-            r = [dialogue rangeOfString:@","
-                                options:0
-                                  range:NSMakeRange(pos, dialogue.length - pos)];
-            
-            const NSUInteger len = r.location == NSNotFound ? dialogue.length - pos : r.location - pos;
-            NSString *p = [dialogue substringWithRange:NSMakeRange(pos, len)];
-            p = [p stringByReplacingOccurrencesOfString:@"\\N" withString:@"\n"];
-            [ma addObject: p];
-        }
-        
-        return ma;
-    }
-    
-    return nil;
-}
-
-+ (NSString *) removeCommandsFromEventText: (NSString *) text
-{
-    NSMutableString *ms = [NSMutableString string];
-    
-    NSScanner *scanner = [NSScanner scannerWithString:text];
-    while (!scanner.isAtEnd) {
-        
-        NSString *s;
-        if ([scanner scanUpToString:@"{\\" intoString:&s]) {
-            
-            [ms appendString:s];
-        }
-        
-        if (!([scanner scanString:@"{\\" intoString:nil] &&
-              [scanner scanUpToString:@"}" intoString:nil] &&
-              [scanner scanString:@"}" intoString:nil])) {
-            
-            break;
-        }
-    }
-    
-    return ms;
-}
-
-@end
-
-static void FFLog(void* context, int level, const char* format, va_list args) {
-    @autoreleasepool {
-        //Trim time at the beginning and new line at the end
-        NSString* message = [[NSString alloc] initWithFormat: [NSString stringWithUTF8String: format] arguments: args];
-        switch (level) {
-            case 0:
-            case 1:
-//                LoggerStream(0, @"%@", [message stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]]);
-                break;
-            case 2:
-//                LoggerStream(1, @"%@", [message stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]]);
-                break;
-            case 3:
-            case 4:
-//                LoggerStream(2, @"%@", [message stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]]);
-                break;
-            default:
-//                LoggerStream(3, @"%@", [message stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]]);
-                break;
-        }
-    }
 }
 

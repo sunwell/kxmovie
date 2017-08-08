@@ -80,18 +80,10 @@ static NSMutableDictionary * gHistory;
     NSUInteger          _tickCounter;
     BOOL                _fullscreen;
     BOOL                _fitMode;
-    BOOL                _infoMode;
     BOOL                _restoreIdleTimer;
     BOOL                _interrupted;
 
     KxMovieGLView       *_glView;
-    UIImageView         *_imageView;
-    UIView              *_topHUD;
-    UIToolbar           *_topBar;
-    
-    UIButton            *_doneButton;
-    UIButton            *_infoButton;
-    UITableView         *_tableView;
     UIActivityIndicatorView *_activityIndicatorView;
     
 #ifdef DEBUG
@@ -184,8 +176,6 @@ static NSMutableDictionary * gHistory;
 //        dispatch_release(_dispatchQueue);
         _dispatchQueue = NULL;
     }
-    
-//    LoggerStream(1, @"%@ dealloc", self);
 }
 
 - (void)loadView
@@ -219,44 +209,10 @@ _messageLabel.hidden = YES;
 
     CGFloat topH = 50;
     CGFloat botH = 50;
-
-    _topHUD    = [[UIView alloc] initWithFrame:CGRectMake(0,0,0,0)];
-    _topBar    = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, width, topH)];
-    
-    _topHUD.frame = CGRectMake(0,0,width,_topBar.frame.size.height);
-    _topHUD.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    _topBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    
-    [self.view addSubview:_topBar];
-    [self.view addSubview:_topHUD];
-    
-    // top hud
-    _doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _doneButton.frame = CGRectMake(0, 1, 50, topH);
-    _doneButton.backgroundColor = [UIColor clearColor];
-//    _doneButton.backgroundColor = [UIColor redColor];
-    [_doneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [_doneButton setTitle:NSLocalizedString(@"OK", nil) forState:UIControlStateNormal];
-    _doneButton.titleLabel.font = [UIFont systemFontOfSize:18];
-    _doneButton.showsTouchWhenHighlighted = YES;
-    [_doneButton addTarget:self action:@selector(doneDidTouch:)
-          forControlEvents:UIControlEventTouchUpInside];
-//    [_doneButton setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
-    
-    _infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
-    _infoButton.frame = CGRectMake(width-31, (topH-20)/2+1, 20, 20);
-    _infoButton.showsTouchWhenHighlighted = YES;
-    _infoButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
-    [_infoButton addTarget:self action:@selector(infoDidTouch:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [_topHUD addSubview:_doneButton];
-    [_topHUD addSubview:_infoButton];
     
 
     if (_decoder) {
         [self setupPresentView];
-    } else {
-        _infoButton.hidden = YES;
     }
 }
 
@@ -305,9 +261,6 @@ _messageLabel.hidden = YES;
         
     if (self.presentingViewController)
         [self fullscreenMode:YES];
-    
-    if (_infoMode)
-        [self showInfoView:NO animated:NO];
     
     _savedIdleTimer = [[UIApplication sharedApplication] isIdleTimerDisabled];
     
@@ -425,11 +378,6 @@ _messageLabel.hidden = YES;
         [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void) infoDidTouch: (id) sender
-{
-    [self showInfoView: !_infoMode animated:YES];
-}
-
 - (void) playDidTouch: (id) sender
 {
     if (self.playing)
@@ -468,10 +416,6 @@ _messageLabel.hidden = YES;
         _dispatchQueue  = dispatch_queue_create("KxMovie", DISPATCH_QUEUE_SERIAL);
         _videoFrames    = [NSMutableArray array];
         
-//        if (_decoder.subtitleStreamsCount) {
-//            _subtitles = [NSMutableArray array];
-//        }
-        
         if (_decoder.isNetwork) {
             
             _minBufferedDuration = NETWORK_MIN_BUFFERED_DURATION;
@@ -507,13 +451,9 @@ _messageLabel.hidden = YES;
                 _maxBufferedDuration = _minBufferedDuration * 2;
         }
         
-//        LoggerStream(2, @"buffered limit: %.1f - %.1f", _minBufferedDuration, _maxBufferedDuration);
-        
         if (self.isViewLoaded) {
             
             [self setupPresentView];
-            
-            _infoButton.hidden      = NO;
             
             if (_activityIndicatorView.isAnimating) {
                 
@@ -522,7 +462,6 @@ _messageLabel.hidden = YES;
                 [self restorePlay];
             }
         }
-        
     } else {
         
          if (self.isViewLoaded && self.view.window) {
@@ -549,36 +488,14 @@ _messageLabel.hidden = YES;
     
     if (_decoder.validVideo) {
         _glView = [[KxMovieGLView alloc] initWithFrame:bounds decoder:_decoder];
-    } 
-    
-    if (!_glView) {
-        
-//        LoggerVideo(0, @"fallback to use RGB video frame and UIKit");
-        [_decoder setupVideoFrameFormat:KxVideoFrameFormatRGB];
-        _imageView = [[UIImageView alloc] initWithFrame:bounds];
-        _imageView.backgroundColor = [UIColor blackColor];
     }
     
-    UIView *frameView = [self frameView];
+    UIView *frameView = _glView;
     frameView.contentMode = UIViewContentModeScaleAspectFit;
     frameView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     
     [self.view insertSubview:frameView atIndex:0];
-        
-    if (_decoder.validVideo) {
-        
-    } else {
-       
-        _imageView.image = [UIImage imageNamed:@"kxmovie.bundle/music_icon.png"];
-        _imageView.contentMode = UIViewContentModeCenter;
-    }
-    
     self.view.backgroundColor = [UIColor clearColor];
-}
-
-
-- (UIView *) frameView {
-    return _glView ? _glView : _imageView;
 }
 
 - (BOOL) addFrames: (NSArray *)frames {
@@ -676,10 +593,6 @@ _messageLabel.hidden = YES;
     
     if (self.playing) {
         
-//        const NSUInteger leftFrames =
-//        (_decoder.validVideo ? _videoFrames.count : 0) +
-//        (_decoder.validAudio ? _audioFrames.count : 0);
-        
         const NSUInteger leftFrames = _decoder.validVideo ? _videoFrames.count : 0;
         
         if (0 == leftFrames) {
@@ -734,12 +647,7 @@ _messageLabel.hidden = YES;
     NSTimeInterval dTime = now - _tickCorrectionTime;
     NSTimeInterval correction = dPosition - dTime;
     
-    //if ((_tickCounter % 200) == 0)
-    //    LoggerStream(1, @"tick correction %.4f", correction);
-    
     if (correction > 1.f || correction < -1.f) {
-        
-//        LoggerStream(1, @"tick correction reset %.2f", correction);
         correction = 0;
         _tickCorrectionTime = 0;
     }
@@ -788,8 +696,8 @@ _messageLabel.hidden = YES;
         
     } else {
         
-        KxVideoFrameRGB *rgbFrame = (KxVideoFrameRGB *)frame;
-        _imageView.image = [rgbFrame asImage];
+//        KxVideoFrameRGB *rgbFrame = (KxVideoFrameRGB *)frame;
+//        _imageView.image = [rgbFrame asImage];
     }
     
     _moviePosition = frame.position;
@@ -874,75 +782,6 @@ _messageLabel.hidden = YES;
     _bufferedDuration = 0;
 }
 
-- (void) showInfoView: (BOOL) showInfo animated: (BOOL)animated
-{
-    if (!_tableView)
-        [self createTableView];
-
-    [self pause];
-    
-    CGSize size = self.view.bounds.size;
-    CGFloat Y = _topHUD.bounds.size.height;
-    
-    if (showInfo) {
-        
-        _tableView.hidden = NO;
-        
-        if (animated) {
-        
-            [UIView animateWithDuration:0.4
-                                  delay:0.0
-                                options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
-                             animations:^{
-                                 _tableView.frame = CGRectMake(0,Y,size.width,size.height - Y);
-                             }
-                             completion:nil];
-        } else {
-            
-            _tableView.frame = CGRectMake(0,Y,size.width,size.height - Y);
-        }
-    
-    } else {
-        
-        if (animated) {
-            
-            [UIView animateWithDuration:0.4
-                                  delay:0.0
-                                options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionNone
-                             animations:^{
-                                 _tableView.frame = CGRectMake(0,size.height,size.width,size.height - Y);
-                             }
-                             completion:^(BOOL f){
-                                 if (f) {
-                                     _tableView.hidden = YES;
-                                 }
-                             }];
-        } else {
-        
-            _tableView.frame = CGRectMake(0,size.height,size.width,size.height - Y);
-            _tableView.hidden = YES;
-        }
-    }
-    
-    _infoMode = showInfo;    
-}
-
-- (void) createTableView
-{    
-    _tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    _tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth |UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-    _tableView.delegate = self;
-    _tableView.dataSource = self;
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.hidden = YES;
-    
-    CGSize size = self.view.bounds.size;
-    CGFloat Y = _topHUD.bounds.size.height;
-    _tableView.frame = CGRectMake(0,size.height,size.width,size.height - Y);
-    
-    [self.view addSubview:_tableView];   
-}
-
 - (void) handleDecoderMovieError: (NSError *) error
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
@@ -959,196 +798,6 @@ _messageLabel.hidden = YES;
     //if (!_decoder)
     //    return NO;
     return _interrupted;
-}
-
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return KxMovieInfoSectionCount;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    switch (section) {
-        case KxMovieInfoSectionGeneral:
-            return NSLocalizedString(@"General", nil);
-        case KxMovieInfoSectionMetadata:
-            return NSLocalizedString(@"Metadata", nil);
-        case KxMovieInfoSectionVideo: {
-            NSArray *a = _decoder.info[@"video"];
-            return a.count ? NSLocalizedString(@"Video", nil) : nil;
-        }
-        case KxMovieInfoSectionAudio: {
-            NSArray *a = _decoder.info[@"audio"];
-            return a.count ?  NSLocalizedString(@"Audio", nil) : nil;
-        }
-        case KxMovieInfoSectionSubtitles: {
-            NSArray *a = _decoder.info[@"subtitles"];
-            return a.count ? NSLocalizedString(@"Subtitles", nil) : nil;
-        }
-    }
-    return @"";
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    switch (section) {
-        case KxMovieInfoSectionGeneral:
-            return KxMovieInfoGeneralCount;
-            
-        case KxMovieInfoSectionMetadata: {
-            NSDictionary *d = [_decoder.info valueForKey:@"metadata"];
-            return d.count;
-        }
-            
-        case KxMovieInfoSectionVideo: {
-            NSArray *a = _decoder.info[@"video"];
-            return a.count;
-        }
-            
-        case KxMovieInfoSectionAudio: {
-            NSArray *a = _decoder.info[@"audio"];
-            return a.count;
-        }
-            
-        case KxMovieInfoSectionSubtitles: {
-            NSArray *a = _decoder.info[@"subtitles"];
-            return a.count ? a.count + 1 : 0;
-        }
-            
-        default:
-            return 0;
-    }
-}
-
-- (id) mkCell: (NSString *) cellIdentifier
-    withStyle: (UITableViewCellStyle) style
-{
-    UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:style reuseIdentifier:cellIdentifier];
-    }
-    return cell;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell;
-    
-    if (indexPath.section == KxMovieInfoSectionGeneral) {
-    
-        if (indexPath.row == KxMovieInfoGeneralBitrate) {
-            
-            int bitrate = [_decoder.info[@"bitrate"] intValue];
-            cell = [self mkCell:@"ValueCell" withStyle:UITableViewCellStyleValue1];
-            cell.textLabel.text = NSLocalizedString(@"Bitrate", nil);
-            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d kb/s",bitrate / 1000];
-            
-        } else if (indexPath.row == KxMovieInfoGeneralFormat) {
-
-            NSString *format = _decoder.info[@"format"];
-            cell = [self mkCell:@"ValueCell" withStyle:UITableViewCellStyleValue1];
-            cell.textLabel.text = NSLocalizedString(@"Format", nil);
-            cell.detailTextLabel.text = format ? format : @"-";
-        }
-        
-    } else if (indexPath.section == KxMovieInfoSectionMetadata) {
-      
-        NSDictionary *d = _decoder.info[@"metadata"];
-        NSString *key = d.allKeys[indexPath.row];
-        cell = [self mkCell:@"ValueCell" withStyle:UITableViewCellStyleValue1];
-        cell.textLabel.text = key.capitalizedString;
-        cell.detailTextLabel.text = [d valueForKey:key];
-        
-    } else if (indexPath.section == KxMovieInfoSectionVideo) {
-        
-        NSArray *a = _decoder.info[@"video"];
-        cell = [self mkCell:@"VideoCell" withStyle:UITableViewCellStyleValue1];
-        cell.textLabel.text = a[indexPath.row];
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
-        cell.textLabel.numberOfLines = 2;
-        
-    } else if (indexPath.section == KxMovieInfoSectionAudio) {
-        
-        NSArray *a = _decoder.info[@"audio"];
-        cell = [self mkCell:@"AudioCell" withStyle:UITableViewCellStyleValue1];
-        cell.textLabel.text = a[indexPath.row];
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
-        cell.textLabel.numberOfLines = 2;
-        BOOL selected = _decoder.selectedAudioStream == indexPath.row;
-        cell.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-        
-    } else if (indexPath.section == KxMovieInfoSectionSubtitles) {
-        
-        NSArray *a = _decoder.info[@"subtitles"];
-        
-        cell = [self mkCell:@"SubtitleCell" withStyle:UITableViewCellStyleValue1];
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
-        cell.textLabel.numberOfLines = 1;
-        
-        if (indexPath.row) {
-            cell.textLabel.text = a[indexPath.row - 1];
-        } else {
-            cell.textLabel.text = NSLocalizedString(@"Disable", nil);
-        }
-        
-        const BOOL selected = _decoder.selectedSubtitleStream == (indexPath.row - 1);
-        cell.accessoryType = selected ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-    }
-    
-     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    return cell;
-}
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.section == KxMovieInfoSectionAudio) {
-        
-        NSInteger selected = _decoder.selectedAudioStream;
-        
-        if (selected != indexPath.row) {
-
-            _decoder.selectedAudioStream = indexPath.row;
-            NSInteger now = _decoder.selectedAudioStream;
-            
-            if (now == indexPath.row) {
-            
-                UITableViewCell *cell;
-                
-                cell = [_tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                
-                indexPath = [NSIndexPath indexPathForRow:selected inSection:KxMovieInfoSectionAudio];
-                cell = [_tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-            }
-        }
-        
-    } else if (indexPath.section == KxMovieInfoSectionSubtitles) {
-        
-        NSInteger selected = _decoder.selectedSubtitleStream;
-        
-        if (selected != (indexPath.row - 1)) {
-            
-            _decoder.selectedSubtitleStream = indexPath.row - 1;
-            NSInteger now = _decoder.selectedSubtitleStream;
-            
-            if (now == (indexPath.row - 1)) {
-                
-                UITableViewCell *cell;
-                
-                cell = [_tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryCheckmark;
-                
-                indexPath = [NSIndexPath indexPathForRow:selected + 1 inSection:KxMovieInfoSectionSubtitles];
-                cell = [_tableView cellForRowAtIndexPath:indexPath];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-            }
-        }
-    }
 }
 
 @end
