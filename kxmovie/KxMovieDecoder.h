@@ -51,9 +51,9 @@ typedef enum {
 @property (readonly, nonatomic) CGFloat duration;
 @end
 
-@interface KxAudioFrame : KxMovieFrame
-@property (readonly, nonatomic, strong) NSData *samples;
-@end
+//@interface KxAudioFrame : KxMovieFrame
+//@property (readonly, nonatomic, strong) NSData *samples;
+//@end
 
 @interface KxVideoFrame : KxMovieFrame
 @property (readonly, nonatomic) KxVideoFrameFormat format;
@@ -73,14 +73,14 @@ typedef enum {
 @property (readonly, nonatomic, strong) NSData *chromaR;
 @end
 
-@interface KxArtworkFrame : KxMovieFrame
-@property (readonly, nonatomic, strong) NSData *picture;
-- (UIImage *) asImage;
-@end
-
-@interface KxSubtitleFrame : KxMovieFrame
-@property (readonly, nonatomic, strong) NSString *text;
-@end
+//@interface KxArtworkFrame : KxMovieFrame
+//@property (readonly, nonatomic, strong) NSData *picture;
+//- (UIImage *) asImage;
+//@end
+//
+//@interface KxSubtitleFrame : KxMovieFrame
+//@property (readonly, nonatomic, strong) NSString *text;
+//@end
 
 typedef BOOL(^KxMovieDecoderInterruptCallback)();
 

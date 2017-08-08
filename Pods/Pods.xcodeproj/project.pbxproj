@@ -7,72 +7,42 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		16EC5E39341329A40320CAEE4369908F /* LoggerCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 85EFEDA41569D2B94DBCA0E21CB4222B /* LoggerCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2C4837E2957094B8E7CEDB913CCB759E /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70A37A40C25116E7B5F86EF0B6E5CCF5 /* CFNetwork.framework */; };
-		7C0B18347175BC96464330844D286CA5 /* NSLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 95B54B6CB1519E9D51F5331CEAA906C4 /* NSLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		93BF91EBA26FE3F6EDB8FE565F52E99B /* NSLogger-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A93BC96E164A2D2FCBA19E0F42031D20 /* NSLogger-dummy.m */; };
-		9E7B680C9B1EFA6961760E35EC084125 /* LoggerClient.h in Headers */ = {isa = PBXBuildFile; fileRef = CD107A96209B563F888C8D0284115729 /* LoggerClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A3E0A5CC84363BBB06405635C41F350C /* LoggerClient.m in Sources */ = {isa = PBXBuildFile; fileRef = C3AF691FF814583ED96431C7AA62A459 /* LoggerClient.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		ABE14E7C7DEF6FC05DCC612D9E09F8A2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 014739289562179E69107F00EF3277EC /* Foundation.framework */; };
-		DAC36AB0C7D56466E53148DBB6F80304 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 014739289562179E69107F00EF3277EC /* Foundation.framework */; };
-		DB02198FC6419D14FB17256DFA1EFF92 /* Pods-kxmovie-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E20E40F37F6C32264D826E2C4F6B5AFC /* Pods-kxmovie-dummy.m */; };
-		E3247FF41A197C0C53CFF874D140210D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C5C5B2C472B56BB4B528AACA325B4DD /* SystemConfiguration.framework */; };
+		3F0D4330EB269E51D168A3D2BC69EB43 /* Pods-kxmovie-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = E20E40F37F6C32264D826E2C4F6B5AFC /* Pods-kxmovie-dummy.m */; };
+		C250EAB48884F51828C5D535FEE6EAB3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		3DBC21665AE154C2626F4301670CFF8D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D32F159E7535D2FA835446D9B55E4D2A;
-			remoteInfo = NSLogger;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		014739289562179E69107F00EF3277EC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		3FD3390AF00F58B4E7D85E9458FAF66B /* Pods-kxmovie-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-kxmovie-acknowledgements.plist"; sourceTree = "<group>"; };
-		6304FB52264C21EA8A3500AA30B7AD10 /* libNSLogger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libNSLogger.a; path = libNSLogger.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6111AF5D3A1FE3F5715BA8C22D5D815E /* libPods-kxmovie.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-kxmovie.a"; path = "libPods-kxmovie.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6416FE915CD0D3BF2E4AAE95163D3B7E /* Pods-kxmovie.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-kxmovie.debug.xcconfig"; sourceTree = "<group>"; };
-		70A37A40C25116E7B5F86EF0B6E5CCF5 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/CFNetwork.framework; sourceTree = DEVELOPER_DIR; };
-		85EFEDA41569D2B94DBCA0E21CB4222B /* LoggerCommon.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LoggerCommon.h; path = "Client Logger/iOS/LoggerCommon.h"; sourceTree = "<group>"; };
-		885CD6269C8AA2331D8F9E10C87E9156 /* NSLogger-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NSLogger-prefix.pch"; sourceTree = "<group>"; };
+		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		8CBBE1E3E0A630E4DDD5B64940CA2879 /* Pods-kxmovie-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-kxmovie-acknowledgements.markdown"; sourceTree = "<group>"; };
 		8FCB1E558E24E6EB1474FBED7E12D8DA /* Pods-kxmovie.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-kxmovie.release.xcconfig"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		95B54B6CB1519E9D51F5331CEAA906C4 /* NSLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = NSLogger.h; path = "Client Logger/iOS/NSLogger.h"; sourceTree = "<group>"; };
-		9C5C5B2C472B56BB4B528AACA325B4DD /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
-		A93BC96E164A2D2FCBA19E0F42031D20 /* NSLogger-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "NSLogger-dummy.m"; sourceTree = "<group>"; };
-		AF0D3A87CA1F587C6AD8DD2282FB722E /* libPods-kxmovie.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libPods-kxmovie.a"; path = "libPods-kxmovie.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B68C24590D763D95147719BDC56F1F77 /* Pods-kxmovie-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-kxmovie-resources.sh"; sourceTree = "<group>"; };
-		C3AF691FF814583ED96431C7AA62A459 /* LoggerClient.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LoggerClient.m; path = "Client Logger/iOS/LoggerClient.m"; sourceTree = "<group>"; };
-		CD107A96209B563F888C8D0284115729 /* LoggerClient.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LoggerClient.h; path = "Client Logger/iOS/LoggerClient.h"; sourceTree = "<group>"; };
-		D01FF859BD5A187EE89C27F0F8E7375D /* NSLogger.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = NSLogger.xcconfig; sourceTree = "<group>"; };
 		E20E40F37F6C32264D826E2C4F6B5AFC /* Pods-kxmovie-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-kxmovie-dummy.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		AC42791DFA6DA69F693846F449BD4D1D /* Frameworks */ = {
+		D1A69549F985042E8427F7EED298CAAE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C4837E2957094B8E7CEDB913CCB759E /* CFNetwork.framework in Frameworks */,
-				DAC36AB0C7D56466E53148DBB6F80304 /* Foundation.framework in Frameworks */,
-				E3247FF41A197C0C53CFF874D140210D /* SystemConfiguration.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B335080156772A92926A2C70115B01D5 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				ABE14E7C7DEF6FC05DCC612D9E09F8A2 /* Foundation.framework in Frameworks */,
+				C250EAB48884F51828C5D535FEE6EAB3 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		011556ECEACE21ECD164EAFA9CE94932 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6111AF5D3A1FE3F5715BA8C22D5D815E /* libPods-kxmovie.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0772F82E1AC751E873E1F49D43209BA3 /* Pods-kxmovie */ = {
 			isa = PBXGroup;
 			children = (
@@ -87,39 +57,28 @@
 			path = "Target Support Files/Pods-kxmovie";
 			sourceTree = "<group>";
 		};
-		122DA2E5084A4393C29BE363C764795C /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				A3F2541D07F0B46B64E19254C8F455BF /* iOS */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		68D8DF0383F4625553B4D750DF3E2E1D /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				E3237408824C347E51F505432C2E8C5A /* NSLogger */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
 		7DB346D0F39D3F0E887471402A8071AB = {
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
-				122DA2E5084A4393C29BE363C764795C /* Frameworks */,
-				68D8DF0383F4625553B4D750DF3E2E1D /* Pods */,
-				E4980814046D22F3BDED27818E97D65C /* Products */,
+				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
+				011556ECEACE21ECD164EAFA9CE94932 /* Products */,
 				D7140153F8BCEB6F56942FBF1DC1C39D /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
 		};
-		A3F2541D07F0B46B64E19254C8F455BF /* iOS */ = {
+		BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				70A37A40C25116E7B5F86EF0B6E5CCF5 /* CFNetwork.framework */,
-				014739289562179E69107F00EF3277EC /* Foundation.framework */,
-				9C5C5B2C472B56BB4B528AACA325B4DD /* SystemConfiguration.framework */,
+				D35AF013A5F0BAD4F32504907A52519E /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D35AF013A5F0BAD4F32504907A52519E /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
@@ -132,87 +91,23 @@
 			name = "Targets Support Files";
 			sourceTree = "<group>";
 		};
-		E3237408824C347E51F505432C2E8C5A /* NSLogger */ = {
-			isa = PBXGroup;
-			children = (
-				CD107A96209B563F888C8D0284115729 /* LoggerClient.h */,
-				C3AF691FF814583ED96431C7AA62A459 /* LoggerClient.m */,
-				85EFEDA41569D2B94DBCA0E21CB4222B /* LoggerCommon.h */,
-				95B54B6CB1519E9D51F5331CEAA906C4 /* NSLogger.h */,
-				F8E29F2701017A90A722C75AA6948791 /* Support Files */,
-			);
-			name = NSLogger;
-			path = NSLogger;
-			sourceTree = "<group>";
-		};
-		E4980814046D22F3BDED27818E97D65C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6304FB52264C21EA8A3500AA30B7AD10 /* libNSLogger.a */,
-				AF0D3A87CA1F587C6AD8DD2282FB722E /* libPods-kxmovie.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		F8E29F2701017A90A722C75AA6948791 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				D01FF859BD5A187EE89C27F0F8E7375D /* NSLogger.xcconfig */,
-				A93BC96E164A2D2FCBA19E0F42031D20 /* NSLogger-dummy.m */,
-				885CD6269C8AA2331D8F9E10C87E9156 /* NSLogger-prefix.pch */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/NSLogger";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
-/* Begin PBXHeadersBuildPhase section */
-		5A02A85CB9B1AB43B4011C2B3EFD0F26 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9E7B680C9B1EFA6961760E35EC084125 /* LoggerClient.h in Headers */,
-				16EC5E39341329A40320CAEE4369908F /* LoggerCommon.h in Headers */,
-				7C0B18347175BC96464330844D286CA5 /* NSLogger.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
-
 /* Begin PBXNativeTarget section */
-		79E77C00CCF1E694C578F008158239EF /* Pods-kxmovie */ = {
+		82C2C125CA0D8E54F89EBE9E3FFC7F9F /* Pods-kxmovie */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 51160F81804E382E610F9B727171294B /* Build configuration list for PBXNativeTarget "Pods-kxmovie" */;
+			buildConfigurationList = 361903BCB07B748E4A35D7E830158A07 /* Build configuration list for PBXNativeTarget "Pods-kxmovie" */;
 			buildPhases = (
-				2CF4FA59409262D5578F388F9C20185F /* Sources */,
-				B335080156772A92926A2C70115B01D5 /* Frameworks */,
+				AF54F40C2C8DDE0196E22F1EDAF61538 /* Sources */,
+				D1A69549F985042E8427F7EED298CAAE /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				5F8454314E871D96CB44A505A1C14B8A /* PBXTargetDependency */,
 			);
 			name = "Pods-kxmovie";
 			productName = "Pods-kxmovie";
-			productReference = AF0D3A87CA1F587C6AD8DD2282FB722E /* libPods-kxmovie.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		D32F159E7535D2FA835446D9B55E4D2A /* NSLogger */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D7620294A86D23AF7AB255521702E208 /* Build configuration list for PBXNativeTarget "NSLogger" */;
-			buildPhases = (
-				B6E7F5CA37F378DEA663F8B49D5BE196 /* Sources */,
-				AC42791DFA6DA69F693846F449BD4D1D /* Frameworks */,
-				5A02A85CB9B1AB43B4011C2B3EFD0F26 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = NSLogger;
-			productName = NSLogger;
-			productReference = 6304FB52264C21EA8A3500AA30B7AD10 /* libNSLogger.a */;
+			productReference = 6111AF5D3A1FE3F5715BA8C22D5D815E /* libPods-kxmovie.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -232,117 +127,27 @@
 				en,
 			);
 			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
-			productRefGroup = E4980814046D22F3BDED27818E97D65C /* Products */;
+			productRefGroup = 011556ECEACE21ECD164EAFA9CE94932 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D32F159E7535D2FA835446D9B55E4D2A /* NSLogger */,
-				79E77C00CCF1E694C578F008158239EF /* Pods-kxmovie */,
+				82C2C125CA0D8E54F89EBE9E3FFC7F9F /* Pods-kxmovie */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2CF4FA59409262D5578F388F9C20185F /* Sources */ = {
+		AF54F40C2C8DDE0196E22F1EDAF61538 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB02198FC6419D14FB17256DFA1EFF92 /* Pods-kxmovie-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B6E7F5CA37F378DEA663F8B49D5BE196 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A3E0A5CC84363BBB06405635C41F350C /* LoggerClient.m in Sources */,
-				93BF91EBA26FE3F6EDB8FE565F52E99B /* NSLogger-dummy.m in Sources */,
+				3F0D4330EB269E51D168A3D2BC69EB43 /* Pods-kxmovie-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		5F8454314E871D96CB44A505A1C14B8A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = NSLogger;
-			target = D32F159E7535D2FA835446D9B55E4D2A /* NSLogger */;
-			targetProxy = 3DBC21665AE154C2626F4301670CFF8D /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		01E16895EB5D783A2A9A7326383C23C1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6416FE915CD0D3BF2E4AAE95163D3B7E /* Pods-kxmovie.debug.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				MACH_O_TYPE = staticlib;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		165FC45738C042C8AFEABCE25FE4180E /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D01FF859BD5A187EE89C27F0F8E7375D /* NSLogger.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/NSLogger/NSLogger-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-			};
-			name = Release;
-		};
-		22BB62CB07BD89B26B7C0C77D459E025 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = D01FF859BD5A187EE89C27F0F8E7375D /* NSLogger.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/NSLogger/NSLogger-prefix.pch";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PRIVATE_HEADERS_FOLDER_PATH = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PUBLIC_HEADERS_FOLDER_PATH = "";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-			};
-			name = Debug;
-		};
 		3890D7C92DE120C2BA762135796CFA80 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -436,7 +241,7 @@
 			};
 			name = Debug;
 		};
-		641EB2A0A9B4235975ED1026A74467A1 /* Release */ = {
+		7745A1B4559925ECA800608E41732C51 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8FCB1E558E24E6EB1474FBED7E12D8DA /* Pods-kxmovie.release.xcconfig */;
 			buildSettings = {
@@ -459,6 +264,29 @@
 			};
 			name = Release;
 		};
+		F9D490A99B1770E99997C728AB055BD1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6416FE915CD0D3BF2E4AAE95163D3B7E /* Pods-kxmovie.debug.xcconfig */;
+			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				MACH_O_TYPE = staticlib;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -471,20 +299,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		51160F81804E382E610F9B727171294B /* Build configuration list for PBXNativeTarget "Pods-kxmovie" */ = {
+		361903BCB07B748E4A35D7E830158A07 /* Build configuration list for PBXNativeTarget "Pods-kxmovie" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				01E16895EB5D783A2A9A7326383C23C1 /* Debug */,
-				641EB2A0A9B4235975ED1026A74467A1 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D7620294A86D23AF7AB255521702E208 /* Build configuration list for PBXNativeTarget "NSLogger" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				22BB62CB07BD89B26B7C0C77D459E025 /* Debug */,
-				165FC45738C042C8AFEABCE25FE4180E /* Release */,
+				F9D490A99B1770E99997C728AB055BD1 /* Debug */,
+				7745A1B4559925ECA800608E41732C51 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

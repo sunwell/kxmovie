@@ -13,7 +13,6 @@
 #import <MediaPlayer/MediaPlayer.h>
 #import <QuartzCore/QuartzCore.h>
 #import "KxMovieDecoder.h"
-#import "KxAudioManager.h"
 #import "KxMovieGLView.h"
 //#import "KxLogger.h"
 
@@ -114,7 +113,7 @@ static NSMutableDictionary * gHistory;
 
 @property (readwrite) BOOL playing;
 @property (readwrite) BOOL decoding;
-@property (readwrite, strong) KxArtworkFrame *artworkFrame;
+//@property (readwrite, strong) KxArtworkFrame *artworkFrame;
 @end
 
 @implementation KxMovieViewController
@@ -130,8 +129,6 @@ static NSMutableDictionary * gHistory;
 + (id) movieViewControllerWithContentPath: (NSString *) path
                                parameters: (NSDictionary *) parameters
 {    
-    id<KxAudioManager> audioManager = [KxAudioManager audioManager];
-    [audioManager activateAudioSession];    
     return [[KxMovieViewController alloc] initWithContentPath: path parameters: parameters];
 }
 
@@ -396,11 +393,6 @@ _messageLabel.hidden = YES;
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [self tick];
     });
-
-//    if (_decoder.validAudio)
-//        [self enableAudio:YES];
-    
-//    LoggerStream(1, @"play movie");
 }
 
 - (void) pause
@@ -777,14 +769,7 @@ _messageLabel.hidden = YES;
             interval = [self presentVideoFrame:frame];
         
     } else if (_decoder.validAudio) {
-
-        //interval = _bufferedDuration * 0.5;
                 
-        if (self.artworkFrame) {
-            
-            _imageView.image = [self.artworkFrame asImage];
-            self.artworkFrame = nil;
-        }
     }
     
 #ifdef DEBUG
