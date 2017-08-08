@@ -23,8 +23,8 @@
     self.window.rootViewController = navVc;
     [self.window makeKeyAndVisible];
 
-    LoggerApp(1, @"Application didFinishLaunchingWithOptions");
-
+//    LoggerApp(1, @"Application didFinishLaunchingWithOptions");
+    
     return YES;
 }
 
@@ -39,7 +39,7 @@
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     
-    LoggerApp(1, @"applicationDidEnterBackground");
+//    LoggerApp(1, @"applicationDidEnterBackground");
     
     //id audioManager = [KxAudioManager audioManager];
     //[audioManager deactivateAudioSession];

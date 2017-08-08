@@ -35,6 +35,7 @@
 //            @"rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov",
             @"http://gifs.51gif.com/20161202/video/2508584.mp4",
             @"http://gifs.51gif.com/20161202/video/2531892.mp4",
+            @"http://gifs.51gif.com/20161212/video/54ea1986a44c43619f34b3bf93ef61e0.mp4",
         
             //@"rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov",
             //@"http://santai.tv/vod/test/BigBuckBunny_175k.mov",

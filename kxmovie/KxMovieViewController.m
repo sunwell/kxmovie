@@ -585,133 +585,11 @@ _messageLabel.hidden = YES;
 }
 
 
-- (UIView *) frameView
-{
+- (UIView *) frameView {
     return _glView ? _glView : _imageView;
 }
 
-//- (void) audioCallbackFillData: (float *) outData
-//                     numFrames: (UInt32) numFrames
-//                   numChannels: (UInt32) numChannels
-//{
-//    //fillSignalF(outData,numFrames,numChannels);
-//    //return;
-//
-//    if (_buffered) {
-//        memset(outData, 0, numFrames * numChannels * sizeof(float));
-//        return;
-//    }
-//
-//    @autoreleasepool {
-//
-//        while (numFrames > 0) {
-//
-//            if (!_currentAudioFrame) {
-//
-//                @synchronized(_audioFrames) {
-//
-//                    NSUInteger count = _audioFrames.count;
-//
-//                    if (count > 0) {
-//
-//                        KxAudioFrame *frame = _audioFrames[0];
-//
-//#ifdef DUMP_AUDIO_DATA
-//                        LoggerAudio(2, @"Audio frame position: %f", frame.position);
-//#endif
-//                        if (_decoder.validVideo) {
-//
-//                            const CGFloat delta = _moviePosition - frame.position;
-//
-//                            if (delta < -0.1) {
-//
-//                                memset(outData, 0, numFrames * numChannels * sizeof(float));
-//#ifdef DEBUG
-////                                LoggerStream(0, @"desync audio (outrun) wait %.4f %.4f", _moviePosition, frame.position);
-//                                _debugAudioStatus = 1;
-//                                _debugAudioStatusTS = [NSDate date];
-//#endif
-//                                break; // silence and exit
-//                            }
-//
-//                            [_audioFrames removeObjectAtIndex:0];
-//
-//                            if (delta > 0.1 && count > 1) {
-//
-//#ifdef DEBUG
-////                                LoggerStream(0, @"desync audio (lags) skip %.4f %.4f", _moviePosition, frame.position);
-//                                _debugAudioStatus = 2;
-//                                _debugAudioStatusTS = [NSDate date];
-//#endif
-//                                continue;
-//                            }
-//
-//                        } else {
-//
-//                            [_audioFrames removeObjectAtIndex:0];
-//                            _moviePosition = frame.position;
-//                            _bufferedDuration -= frame.duration;
-//                        }
-//
-//                        _currentAudioFramePos = 0;
-//                        _currentAudioFrame = frame.samples;
-//                    }
-//                }
-//            }
-//
-//            if (_currentAudioFrame) {
-//
-//                const void *bytes = (Byte *)_currentAudioFrame.bytes + _currentAudioFramePos;
-//                const NSUInteger bytesLeft = (_currentAudioFrame.length - _currentAudioFramePos);
-//                const NSUInteger frameSizeOf = numChannels * sizeof(float);
-//                const NSUInteger bytesToCopy = MIN(numFrames * frameSizeOf, bytesLeft);
-//                const NSUInteger framesToCopy = bytesToCopy / frameSizeOf;
-//
-//                memcpy(outData, bytes, bytesToCopy);
-//                numFrames -= framesToCopy;
-//                outData += framesToCopy * numChannels;
-//
-//                if (bytesToCopy < bytesLeft)
-//                    _currentAudioFramePos += bytesToCopy;
-//                else
-//                    _currentAudioFrame = nil;
-//
-//            } else {
-//
-//                memset(outData, 0, numFrames * numChannels * sizeof(float));
-//                //LoggerStream(1, @"silence audio");
-//#ifdef DEBUG
-//                _debugAudioStatus = 3;
-//                _debugAudioStatusTS = [NSDate date];
-//#endif
-//                break;
-//            }
-//        }
-//    }
-//}
-
-//- (void) enableAudio: (BOOL) on
-//{
-//    id<KxAudioManager> audioManager = [KxAudioManager audioManager];
-//
-//    if (on && _decoder.validAudio) {
-//
-//        audioManager.outputBlock = ^(float *outData, UInt32 numFrames, UInt32 numChannels) {
-//
-//            [self audioCallbackFillData: outData numFrames:numFrames numChannels:numChannels];
-//        };
-//
-//        [audioManager play];
-//
-//    } else {
-//
-//        [audioManager pause];
-//        audioManager.outputBlock = nil;
-//    }
-//}
-
-- (BOOL) addFrames: (NSArray *)frames
-{
+- (BOOL) addFrames: (NSArray *)frames {
     if (_decoder.validVideo) {
         
         @synchronized(_videoFrames) {
@@ -724,31 +602,10 @@ _messageLabel.hidden = YES;
         }
     }
     
-//    if (_decoder.validAudio) {
-//
-//        @synchronized(_audioFrames) {
-//
-//            for (KxMovieFrame *frame in frames)
-//                if (frame.type == KxMovieFrameTypeAudio) {
-//                    [_audioFrames addObject:frame];
-//                    if (!_decoder.validVideo)
-//                        _bufferedDuration += frame.duration;
-//                }
-//        }
-//
-//        if (!_decoder.validVideo) {
-//
-//            for (KxMovieFrame *frame in frames)
-//                if (frame.type == KxMovieFrameTypeArtwork)
-//                    self.artworkFrame = (KxArtworkFrame *)frame;
-//        }
-//    }
-    
     return self.playing && _bufferedDuration < _maxBufferedDuration;
 }
 
-- (BOOL) decodeFrames
-{
+- (BOOL) decodeFrames {
     //NSAssert(dispatch_get_current_queue() == _dispatchQueue, @"bugcheck");
     
     NSArray *frames = nil;
@@ -765,8 +622,7 @@ _messageLabel.hidden = YES;
     return NO;
 }
 
-- (void) asyncDecodeFrames
-{
+- (void) asyncDecodeFrames {
     if (self.decoding)
         return;
     
@@ -961,10 +817,6 @@ _messageLabel.hidden = YES;
     _fullscreen = on;
     UIApplication *app = [UIApplication sharedApplication];
     [app setStatusBarHidden:on withAnimation:UIStatusBarAnimationNone];
-    // if (!self.presentingViewController) {
-    //[self.navigationController setNavigationBarHidden:on animated:YES];
-    //[self.tabBarController setTabBarHidden:on animated:YES];
-    // }
 }
 
 - (void) setMoviePositionFromDecoder
@@ -1033,12 +885,6 @@ _messageLabel.hidden = YES;
     @synchronized(_videoFrames) {
         [_videoFrames removeAllObjects];
     }
-    
-//    @synchronized(_audioFrames) {
-//
-//        [_audioFrames removeAllObjects];
-//        _currentAudioFrame = nil;
-//    }
     
     _bufferedDuration = 0;
 }
