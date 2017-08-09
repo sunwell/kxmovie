@@ -102,44 +102,22 @@ static NSMutableDictionary * gHistory;
 
 @implementation KxMoviePlayer
 #pragma mark - life cycle
-
-- (void) viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void)loadView {
+    
+    self.backgroundColor = [UIColor blackColor];
+    self.tintColor = [UIColor blackColor];
+    
+    _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: UIActivityIndicatorViewStyleWhiteLarge];
+    _activityIndicatorView.center = self.center;
+    _activityIndicatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    
+    [self addSubview:_activityIndicatorView];
     
     if (_decoder) {
-        [self restorePlay];
-    } else {
-        [_activityIndicatorView startAnimating];
+        [self setupPresentView];
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(applicationWillResignActive:)
-                                                 name:UIApplicationWillResignActiveNotification
-                                               object:[UIApplication sharedApplication]];
 }
 
-- (void) viewWillDisappear:(BOOL)animated {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [super viewWillDisappear:animated];
-    [_activityIndicatorView stopAnimating];
-    
-    if (_decoder) {
-        [self pause];
-        if (_moviePosition == 0 || _decoder.isEOF)
-            [gHistory removeObjectForKey:_decoder.path];
-        else if (!_decoder.isNetwork)
-            [gHistory setValue:[NSNumber numberWithFloat:_moviePosition]
-                        forKey:_decoder.path];
-    }
-    
-    [_activityIndicatorView stopAnimating];
-    _buffered = NO;
-    _interrupted = YES;
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-}
 
 - (void) applicationWillResignActive: (NSNotification *)notification {
     [self pause];
@@ -148,10 +126,6 @@ static NSMutableDictionary * gHistory;
 + (void)initialize {
     if (!gHistory)
         gHistory = [NSMutableDictionary dictionary];
-}
-
-- (BOOL)prefersStatusBarHidden {
-    return YES;
 }
 
 - (void) dealloc {
@@ -165,38 +139,11 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    
-    if (self.playing) {
-        
-        [self pause];
-        [self freeBufferedFrames];
-        
-        if (_maxBufferedDuration > 0) {
-            
-            _minBufferedDuration = _maxBufferedDuration = 0;
-            [self play];
-        } else {
-            
-            // force ffmpeg to free allocated memory
-            [_decoder closeFile];
-            [_decoder openFile:nil error:nil];
-            
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
-                                        message:NSLocalizedString(@"Out of memory", nil)
-                                       delegate:nil
-                              cancelButtonTitle:NSLocalizedString(@"Close", nil)
-                              otherButtonTitles:nil] show];
-        }
-    } else {
-        [self freeBufferedFrames];
-        [_decoder closeFile];
-        [_decoder openFile:nil error:nil];
-    }
-}
-
 #pragma mark - public
++ (id) moviePlayerWithContentPath: (NSString *) path
+                       parameters: (NSDictionary *) parameters {
+    return [[KxMoviePlayer alloc] initWithContentPath: path parameters: parameters];
+}
 
 -(void) play {
     if (self.playing)
@@ -233,6 +180,70 @@ static NSMutableDictionary * gHistory;
     self.playing = NO;
 }
 
+- (void) m_viewDidAppear:(BOOL)animated {
+    
+    if (_decoder) {
+        [self restorePlay];
+    } else {
+        [_activityIndicatorView startAnimating];
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationWillResignActive:)
+                                                 name:UIApplicationWillResignActiveNotification
+                                               object:[UIApplication sharedApplication]];
+}
+
+- (void) m_viewWillDisappear:(BOOL)animated {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [_activityIndicatorView stopAnimating];
+    
+    if (_decoder) {
+        [self pause];
+        if (_moviePosition == 0 || _decoder.isEOF)
+            [gHistory removeObjectForKey:_decoder.path];
+        else if (!_decoder.isNetwork)
+            [gHistory setValue:[NSNumber numberWithFloat:_moviePosition]
+                        forKey:_decoder.path];
+    }
+    
+    [_activityIndicatorView stopAnimating];
+    _buffered = NO;
+    _interrupted = YES;
+}
+
+- (void)m_didReceiveMemoryWarning {
+    
+    if (self.playing) {
+        
+        [self pause];
+        [self freeBufferedFrames];
+        
+        if (_maxBufferedDuration > 0) {
+            
+            _minBufferedDuration = _maxBufferedDuration = 0;
+            [self play];
+        } else {
+            
+            // force ffmpeg to free allocated memory
+            [_decoder closeFile];
+            [_decoder openFile:nil error:nil];
+            
+            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Failure", nil)
+                                        message:NSLocalizedString(@"Out of memory", nil)
+                                       delegate:nil
+                              cancelButtonTitle:NSLocalizedString(@"Close", nil)
+                              otherButtonTitles:nil] show];
+        }
+    } else {
+        [self freeBufferedFrames];
+        [_decoder closeFile];
+        [_decoder openFile:nil error:nil];
+    }
+}
+
+#pragma mark - private
 - (void) setMoviePosition: (CGFloat) position {
     BOOL playMode = self.playing;
     self.playing = NO;
@@ -243,28 +254,22 @@ static NSMutableDictionary * gHistory;
     });
 }
 
-#pragma mark - private
-+ (id) moviePlayerWithContentPath: (NSString *) path
-                       parameters: (NSDictionary *) parameters {
-    return [[KxMoviePlayer alloc] initWithContentPath: path parameters: parameters];
-}
-
 - (id) initWithContentPath: (NSString *) path
                 parameters: (NSDictionary *) parameters {
     NSAssert(path.length > 0, @"empty path");
     
-    self = [super initWithNibName:nil bundle:nil];
+//    self = [super initWithNibName:nil bundle:nil];
     if (self) {
         
         _moviePosition = 0;
         _parameters = parameters;
         
-        __weak KxMovieViewController *weakSelf = self;
+        __weak KxMoviePlayer *weakSelf = self;
         
         KxMovieDecoder *decoder = [[KxMovieDecoder alloc] init];
         
         decoder.interruptCallback = ^BOOL(){
-            __strong KxMovieViewController *strongSelf = weakSelf;
+            __strong KxMoviePlayer *strongSelf = weakSelf;
             return strongSelf ? [strongSelf interruptDecoder] : YES;
         };
         
@@ -273,7 +278,7 @@ static NSMutableDictionary * gHistory;
             NSError *error = nil;
             [decoder openFile:path error:&error];
             
-            __strong KxMovieViewController *strongSelf = weakSelf;
+            __strong KxMoviePlayer *strongSelf = weakSelf;
             if (strongSelf) {
                 
                 dispatch_sync(dispatch_get_main_queue(), ^{
@@ -283,24 +288,6 @@ static NSMutableDictionary * gHistory;
         });
     }
     return self;
-}
-
-- (void)loadView {
-    CGRect bounds = [[UIScreen mainScreen] applicationFrame];
-    
-    self = [[UIView alloc] initWithFrame:bounds];
-    self.backgroundColor = [UIColor blackColor];
-    self.tintColor = [UIColor blackColor];
-    
-    _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: UIActivityIndicatorViewStyleWhiteLarge];
-    _activityIndicatorView.center = self.view.center;
-    _activityIndicatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-    
-    [self addSubview:_activityIndicatorView];
-    
-    if (_decoder) {
-        [self setupPresentView];
-    }
 }
 
 - (void) setMovieDecoder: (KxMovieDecoder *) decoder
@@ -347,30 +334,27 @@ static NSMutableDictionary * gHistory;
                 _maxBufferedDuration = _minBufferedDuration * 2;
         }
         
-        if (self.isViewLoaded) {
-            
+//        if (self.isViewLoaded) {
+        
             [self setupPresentView];
             
             if (_activityIndicatorView.isAnimating) {
-                
                 [_activityIndicatorView stopAnimating];
-                // if (self.view.window)
                 [self restorePlay];
             }
-        }
+//        }
     } else {
         
-        if (self.isViewLoaded && self.view.window) {
-            
+//        if (self.isViewLoaded) {
+        
             [_activityIndicatorView stopAnimating];
             if (!_interrupted)
                 [self handleDecoderMovieError: error];
-        }
+//        }
     }
 }
 
-- (void) restorePlay
-{
+- (void) restorePlay {
     NSNumber *n = [gHistory valueForKey:_decoder.path];
     if (n)
         [self updatePosition:n.floatValue playMode:YES];
@@ -378,9 +362,8 @@ static NSMutableDictionary * gHistory;
         [self play];
 }
 
-- (void) setupPresentView
-{
-    CGRect bounds = self.view.bounds;
+- (void) setupPresentView {
+    CGRect bounds = self.bounds;
     
     if (_decoder.validVideo) {
         _glView = [[KxMovieGLView alloc] initWithFrame:bounds decoder:_decoder];
@@ -390,8 +373,8 @@ static NSMutableDictionary * gHistory;
     frameView.contentMode = UIViewContentModeScaleAspectFit;
     frameView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
     
-    [self.view insertSubview:frameView atIndex:0];
-    self.view.backgroundColor = [UIColor clearColor];
+    [self insertSubview:frameView atIndex:0];
+    self.backgroundColor = [UIColor clearColor];
 }
 
 - (BOOL) addFrames: (NSArray *)frames {
@@ -431,7 +414,7 @@ static NSMutableDictionary * gHistory;
     if (self.decoding)
         return;
     
-    __weak KxMovieViewController *weakSelf = self;
+    __weak KxMoviePlayer *weakSelf = self;
     __weak KxMovieDecoder *weakDecoder = _decoder;
     
     const CGFloat duration = _decoder.isNetwork ? .0f : 0.1f;
@@ -440,7 +423,7 @@ static NSMutableDictionary * gHistory;
     dispatch_async(_dispatchQueue, ^{
         
         {
-            __strong KxMovieViewController *strongSelf = weakSelf;
+            __strong KxMoviePlayer *strongSelf = weakSelf;
             if (!strongSelf.playing)
                 return;
         }
@@ -459,7 +442,7 @@ static NSMutableDictionary * gHistory;
                     NSArray *frames = [decoder decodeFrames:duration];
                     if (frames.count) {
                         
-                        __strong KxMovieViewController *strongSelf = weakSelf;
+                        __strong KxMoviePlayer *strongSelf = weakSelf;
                         if (strongSelf)
                             good = [strongSelf addFrames:frames];
                     }
@@ -468,14 +451,13 @@ static NSMutableDictionary * gHistory;
         }
         
         {
-            __strong KxMovieViewController *strongSelf = weakSelf;
+            __strong KxMoviePlayer *strongSelf = weakSelf;
             if (strongSelf) strongSelf.decoding = NO;
         }
     });
 }
 
-- (void) tick
-{
+- (void) tick {
     if (_buffered && ((_bufferedDuration > _minBufferedDuration) || _decoder.isEOF)) {
         
         _tickCorrectionTime = 0;
@@ -600,21 +582,21 @@ static NSMutableDictionary * gHistory;
     
     position = MIN(_decoder.duration - 1, MAX(0, position));
     
-    __weak KxMovieViewController *weakSelf = self;
+    __weak KxMoviePlayer *weakSelf = self;
     
     dispatch_async(_dispatchQueue, ^{
         
         if (playMode) {
             
             {
-                __strong KxMovieViewController *strongSelf = weakSelf;
+                __strong KxMoviePlayer *strongSelf = weakSelf;
                 if (!strongSelf) return;
                 [strongSelf setDecoderPosition: position];
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                __strong KxMovieViewController *strongSelf = weakSelf;
+                __strong KxMoviePlayer *strongSelf = weakSelf;
                 if (strongSelf) {
                     [strongSelf setMoviePositionFromDecoder];
                     [strongSelf play];
@@ -623,7 +605,7 @@ static NSMutableDictionary * gHistory;
         } else {
             
             {
-                __strong KxMovieViewController *strongSelf = weakSelf;
+                __strong KxMoviePlayer *strongSelf = weakSelf;
                 if (!strongSelf) return;
                 [strongSelf setDecoderPosition: position];
                 [strongSelf decodeFrames];
@@ -631,7 +613,7 @@ static NSMutableDictionary * gHistory;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 
-                __strong KxMovieViewController *strongSelf = weakSelf;
+                __strong KxMoviePlayer *strongSelf = weakSelf;
                 if (strongSelf) {
                     [strongSelf setMoviePositionFromDecoder];
                     [strongSelf presentFrame];

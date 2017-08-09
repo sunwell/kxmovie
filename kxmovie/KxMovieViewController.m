@@ -293,8 +293,6 @@ _messageLabel.hidden = YES;
     [_activityIndicatorView stopAnimating];
     _buffered = NO;
     _interrupted = YES;
-    
-//    LoggerStream(1, @"viewWillDisappear %@", self);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -308,8 +306,7 @@ _messageLabel.hidden = YES;
 
 #pragma mark - public
 
--(void) play
-{
+-(void) play {
     if (self.playing)
         return;
     

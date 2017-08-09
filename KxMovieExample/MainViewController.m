@@ -10,7 +10,11 @@
 //  KxMovie is licenced under the LGPL v3, see lgpl-3.0.txt
 
 #import "MainViewController.h"
-#import "KxMovieViewController.h"
+#import "VideoDetailController.h"
+
+NSString * const KxMovieParameterMinBufferedDuration = @"KxMovieParameterMinBufferedDuration";
+NSString * const KxMovieParameterMaxBufferedDuration = @"KxMovieParameterMaxBufferedDuration";
+NSString * const KxMovieParameterDisableDeinterlacing = @"KxMovieParameterDisableDeinterlacing";
 
 @interface MainViewController () {
     NSArray *_localMovies;
@@ -238,12 +242,14 @@
     //parameters[KxMovieParameterMinBufferedDuration] = @(0.0f);
     //parameters[KxMovieParameterMaxBufferedDuration] = @(0.0f);
     
-    KxMovieViewController *vc = [KxMovieViewController movieViewControllerWithContentPath:path
-                                                                               parameters:parameters];
+//    KxMovieViewController *vc = [KxMovieViewController movieViewControllerWithContentPath:path
+//                                                                               parameters:parameters];
+//    [self presentViewController:vc animated:YES completion:nil];
+    
+    VideoDetailController *vc = [[VideoDetailController alloc] init];
+    vc.path = path;
+    vc.params = [parameters copy];
     [self presentViewController:vc animated:YES completion:nil];
-    //[self.navigationController pushViewController:vc animated:YES];    
-
-//    LoggerApp(1, @"Playing a movie: %@", path);
 }
 
 @end
