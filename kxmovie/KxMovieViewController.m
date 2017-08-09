@@ -77,9 +77,9 @@ static NSMutableDictionary * gHistory;
     CGFloat             _moviePosition;
     NSTimeInterval      _tickCorrectionTime;
     NSTimeInterval      _tickCorrectionPosition;
-    NSUInteger          _tickCounter;
-    BOOL                _fullscreen;
-    BOOL                _fitMode;
+//    NSUInteger          _tickCounter;
+//    BOOL                _fullscreen;
+//    BOOL                _fitMode;
     BOOL                _restoreIdleTimer;
     BOOL                _interrupted;
 
@@ -253,14 +253,8 @@ _messageLabel.hidden = YES;
     }
 }
 
-- (void) viewDidAppear:(BOOL)animated
-{
-    // LoggerStream(1, @"viewDidAppear");
-    
+- (void) viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-        
-    if (self.presentingViewController)
-        [self fullscreenMode:YES];
     
     _savedIdleTimer = [[UIApplication sharedApplication] isIdleTimerDisabled];
     
@@ -293,9 +287,6 @@ _messageLabel.hidden = YES;
             [gHistory setValue:[NSNumber numberWithFloat:_moviePosition]
                         forKey:_decoder.path];
     }
-    
-    if (_fullscreen)
-        [self fullscreenMode:NO];
         
     [[UIApplication sharedApplication] setIdleTimerDisabled:_savedIdleTimer];
     
@@ -334,7 +325,6 @@ _messageLabel.hidden = YES;
     self.playing = YES;
     _interrupted = NO;
     _tickCorrectionTime = 0;
-    _tickCounter = 0;
 
 #ifdef DEBUG
     _debugStartTime = -1;
@@ -367,41 +357,6 @@ _messageLabel.hidden = YES;
         [self updatePosition:position playMode:playMode];
     });
 }
-
-#pragma mark - actions
-
-- (void) doneDidTouch: (id) sender
-{
-    if (self.presentingViewController || !self.navigationController)
-        [self dismissViewControllerAnimated:YES completion:nil];
-    else
-        [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void) playDidTouch: (id) sender
-{
-    if (self.playing)
-        [self pause];
-    else
-        [self play];
-}
-
-- (void) forwardDidTouch: (id) sender
-{
-    [self setMoviePosition: _moviePosition + 10];
-}
-
-- (void) rewindDidTouch: (id) sender
-{
-    [self setMoviePosition: _moviePosition - 10];
-}
-
-//- (void) progressDidChange: (id) sender
-//{
-//    NSAssert(_decoder.duration != MAXFLOAT, @"bugcheck");
-//    UISlider *slider = sender;
-//    [self setMoviePosition:slider.value * _decoder.duration];
-//}
 
 #pragma mark - private
 
@@ -623,10 +578,6 @@ _messageLabel.hidden = YES;
             [self tick];
         });
     }
-    
-    if ((_tickCounter++ % 3) == 0) {
-//        [self updateHUD];
-    }
 }
 
 - (CGFloat) tickCorrection
@@ -703,13 +654,6 @@ _messageLabel.hidden = YES;
     _moviePosition = frame.position;
         
     return frame.duration;
-}
-
-- (void) fullscreenMode: (BOOL) on
-{
-    _fullscreen = on;
-    UIApplication *app = [UIApplication sharedApplication];
-    [app setStatusBarHidden:on withAnimation:UIStatusBarAnimationNone];
 }
 
 - (void) setMoviePositionFromDecoder

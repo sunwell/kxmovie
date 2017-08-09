@@ -7,6 +7,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface KxMoviePlayer : NSObject
+@interface KxMoviePlayer : UIView
 
 @end
