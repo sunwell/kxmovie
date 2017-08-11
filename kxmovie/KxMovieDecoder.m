@@ -504,9 +504,7 @@ static int interrupt_callback(void *ctx);
     return mp;
 }
 
-- (void) dealloc
-{
-//    LoggerStream(2, @"%@ dealloc", self);
+- (void) dealloc {
     [self closeFile];
 }
 
@@ -534,9 +532,6 @@ static int interrupt_callback(void *ctx);
     if (errCode == kxMovieErrorNone) {
         
         kxMovieError videoErr = [self openVideoStream];
-//        kxMovieError audioErr = [self openAudioStream];
-        
-//        _subtitleStream = -1;
         
         if (videoErr != kxMovieErrorNone) {
             errCode = videoErr; // both fails
@@ -548,7 +543,6 @@ static int interrupt_callback(void *ctx);
         
         [self closeFile];
         NSString *errMsg = errorMessage(errCode);
-//        LoggerStream(0, @"%@, %@", errMsg, path.lastPathComponent);
         if (perror)
             *perror = kxmovieError(errCode, errMsg);
         return NO;

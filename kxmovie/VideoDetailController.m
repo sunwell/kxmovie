@@ -23,14 +23,26 @@
     
     self.view.backgroundColor = [UIColor greenColor];
     
-    self.player = [KxMoviePlayer moviePlayerWithContentPath:self.path parameters:self.params];
-    self.player.frame = CGRectMake(20, 100, ScreenW-40, 300);
+    self.player = [[KxMoviePlayer alloc] initWithFrame:CGRectMake(20, 100, ScreenW-40, 300)];
+    [self.player moviePlayerWithContentPath:self.path parameters:self.params];
     [self.view addSubview:self.player];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.player m_viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.player m_viewWillDisappear:animated];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    
+    [self.player m_didReceiveMemoryWarning];
 }
 
 

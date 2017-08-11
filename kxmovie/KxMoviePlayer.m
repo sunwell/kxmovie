@@ -70,6 +70,7 @@ static NSMutableDictionary * gHistory;
     KxMovieDecoder      *_decoder;
     dispatch_queue_t    _dispatchQueue;
     NSMutableArray      *_videoFrames;
+    NSMutableArray      *_videoFramesCopy;
     CGFloat             _moviePosition;
     NSTimeInterval      _tickCorrectionTime;
     NSTimeInterval      _tickCorrectionPosition;
@@ -102,25 +103,24 @@ static NSMutableDictionary * gHistory;
 
 @implementation KxMoviePlayer
 #pragma mark - life cycle
-- (void)loadView {
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
     
-    self.backgroundColor = [UIColor blackColor];
-    self.tintColor = [UIColor blackColor];
-    
-    _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: UIActivityIndicatorViewStyleWhiteLarge];
-    _activityIndicatorView.center = self.center;
-    _activityIndicatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-    
-    [self addSubview:_activityIndicatorView];
-    
-    if (_decoder) {
-        [self setupPresentView];
+    if (self) {
+        self.backgroundColor = [UIColor blackColor];
+        self.tintColor = [UIColor blackColor];
+        
+        _activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle: UIActivityIndicatorViewStyleWhiteLarge];
+        _activityIndicatorView.frame = CGRectMake(0, 0, 44, 44);
+        _activityIndicatorView.center = CGPointMake(self.bounds.size.width/2.0, self.bounds.size.height/2.0);
+        [self addSubview:_activityIndicatorView];
+        
+        if (_decoder) {
+            [self setupPresentView];
+        }
     }
-}
-
-
-- (void) applicationWillResignActive: (NSNotification *)notification {
-    [self pause];
+    
+    return self;
 }
 
 + (void)initialize {
@@ -140,17 +140,16 @@ static NSMutableDictionary * gHistory;
 }
 
 #pragma mark - public
-+ (id) moviePlayerWithContentPath: (NSString *) path
+- (void) moviePlayerWithContentPath: (NSString *) path
                        parameters: (NSDictionary *) parameters {
-    return [[KxMoviePlayer alloc] initWithContentPath: path parameters: parameters];
+    [self initWithContentPath: path parameters: parameters];
 }
 
 -(void) play {
     if (self.playing)
         return;
     
-    if (!_decoder.validVideo &&
-        !_decoder.validAudio) {
+    if (!_decoder.validVideo) {
         return;
     }
     
@@ -192,6 +191,11 @@ static NSMutableDictionary * gHistory;
                                              selector:@selector(applicationWillResignActive:)
                                                  name:UIApplicationWillResignActiveNotification
                                                object:[UIApplication sharedApplication]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(applicationDidBecomeActive:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
 }
 
 - (void) m_viewWillDisappear:(BOOL)animated {
@@ -243,31 +247,28 @@ static NSMutableDictionary * gHistory;
     }
 }
 
-#pragma mark - private
-- (void) setMoviePosition: (CGFloat) position {
-    BOOL playMode = self.playing;
-    self.playing = NO;
-    
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self updatePosition:position playMode:playMode];
-    });
+#pragma mark - notification
+- (void) applicationWillResignActive:(NSNotification *)notification {
+    [self pause];
 }
 
-- (id) initWithContentPath: (NSString *) path
+- (void)applicationDidBecomeActive:(NSNotification *)notification {
+//    [self restorePlay];
+    [self play];
+}
+
+#pragma mark - private
+- (void) initWithContentPath: (NSString *) path
                 parameters: (NSDictionary *) parameters {
     NSAssert(path.length > 0, @"empty path");
     
-//    self = [super initWithNibName:nil bundle:nil];
     if (self) {
         
         _moviePosition = 0;
         _parameters = parameters;
         
         __weak KxMoviePlayer *weakSelf = self;
-        
         KxMovieDecoder *decoder = [[KxMovieDecoder alloc] init];
-        
         decoder.interruptCallback = ^BOOL(){
             __strong KxMoviePlayer *strongSelf = weakSelf;
             return strongSelf ? [strongSelf interruptDecoder] : YES;
@@ -280,14 +281,12 @@ static NSMutableDictionary * gHistory;
             
             __strong KxMoviePlayer *strongSelf = weakSelf;
             if (strongSelf) {
-                
                 dispatch_sync(dispatch_get_main_queue(), ^{
                     [strongSelf setMovieDecoder:decoder withError:error];
                 });
             }
         });
     }
-    return self;
 }
 
 - (void) setMovieDecoder: (KxMovieDecoder *) decoder
@@ -356,10 +355,11 @@ static NSMutableDictionary * gHistory;
 
 - (void) restorePlay {
     NSNumber *n = [gHistory valueForKey:_decoder.path];
-    if (n)
-        [self updatePosition:n.floatValue playMode:YES];
-    else
+    if (n) {
+//        [self updatePosition:n.floatValue playMode:YES];
+    } else {
         [self play];
+    }
 }
 
 - (void) setupPresentView {
@@ -369,11 +369,8 @@ static NSMutableDictionary * gHistory;
         _glView = [[KxMovieGLView alloc] initWithFrame:bounds decoder:_decoder];
     }
     
-    UIView *frameView = _glView;
-    frameView.contentMode = UIViewContentModeScaleAspectFit;
-    frameView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleBottomMargin;
-    
-    [self insertSubview:frameView atIndex:0];
+    _glView.contentMode = UIViewContentModeScaleAspectFit;
+    [self insertSubview:_glView atIndex:0];
     self.backgroundColor = [UIColor clearColor];
 }
 
@@ -387,6 +384,8 @@ static NSMutableDictionary * gHistory;
                     [_videoFrames addObject:frame];
                     _bufferedDuration += frame.duration;
                 }
+            
+            _videoFramesCopy = [_videoFrames copy];
         }
     }
     
@@ -394,13 +393,10 @@ static NSMutableDictionary * gHistory;
 }
 
 - (BOOL) decodeFrames {
-    //NSAssert(dispatch_get_current_queue() == _dispatchQueue, @"bugcheck");
     
     NSArray *frames = nil;
     
-    if (_decoder.validVideo ||
-        _decoder.validAudio) {
-        
+    if (_decoder.validVideo) {
         frames = [_decoder decodeFrames:0];
     }
     
@@ -430,18 +426,13 @@ static NSMutableDictionary * gHistory;
         
         BOOL good = YES;
         while (good) {
-            
             good = NO;
-            
             @autoreleasepool {
                 
                 __strong KxMovieDecoder *decoder = weakDecoder;
-                
-                if (decoder && (decoder.validVideo || decoder.validAudio)) {
-                    
+                if (decoder && decoder.validVideo) {
                     NSArray *frames = [decoder decodeFrames:duration];
                     if (frames.count) {
-                        
                         __strong KxMoviePlayer *strongSelf = weakSelf;
                         if (strongSelf)
                             good = [strongSelf addFrames:frames];
@@ -536,8 +527,11 @@ static NSMutableDictionary * gHistory;
         KxVideoFrame *frame;
         @synchronized(_videoFrames) {
             
+            if (_videoFrames.count == 0 && _videoFramesCopy.count > 0) {
+                _videoFrames = [_videoFramesCopy copy];
+            }
+            
             if (_videoFrames.count > 0) {
-                
                 frame = _videoFrames[0];
                 [_videoFrames removeObjectAtIndex:0];
                 _bufferedDuration -= frame.duration;
@@ -574,53 +568,6 @@ static NSMutableDictionary * gHistory;
 
 - (void) setDecoderPosition: (CGFloat) position {
     _decoder.position = position;
-}
-
-- (void) updatePosition: (CGFloat) position
-               playMode: (BOOL) playMode {
-    [self freeBufferedFrames];
-    
-    position = MIN(_decoder.duration - 1, MAX(0, position));
-    
-    __weak KxMoviePlayer *weakSelf = self;
-    
-    dispatch_async(_dispatchQueue, ^{
-        
-        if (playMode) {
-            
-            {
-                __strong KxMoviePlayer *strongSelf = weakSelf;
-                if (!strongSelf) return;
-                [strongSelf setDecoderPosition: position];
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                __strong KxMoviePlayer *strongSelf = weakSelf;
-                if (strongSelf) {
-                    [strongSelf setMoviePositionFromDecoder];
-                    [strongSelf play];
-                }
-            });
-        } else {
-            
-            {
-                __strong KxMoviePlayer *strongSelf = weakSelf;
-                if (!strongSelf) return;
-                [strongSelf setDecoderPosition: position];
-                [strongSelf decodeFrames];
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                __strong KxMoviePlayer *strongSelf = weakSelf;
-                if (strongSelf) {
-                    [strongSelf setMoviePositionFromDecoder];
-                    [strongSelf presentFrame];
-                }
-            });
-        }
-    });
 }
 
 - (void) freeBufferedFrames {

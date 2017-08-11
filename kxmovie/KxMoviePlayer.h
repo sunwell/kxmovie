@@ -19,6 +19,11 @@ extern NSString * const KxMovieParameterDisableDeinterlacing;   // BOOL
 
 - (void) play;
 - (void) pause;
-+ (id) moviePlayerWithContentPath: (NSString *) path
+- (void) moviePlayerWithContentPath: (NSString *) path
                        parameters: (NSDictionary *) parameters;
+
+- (void) m_viewDidAppear:(BOOL)animated;
+- (void) m_viewWillDisappear:(BOOL)animated;
+- (void)m_didReceiveMemoryWarning;
+
 @end

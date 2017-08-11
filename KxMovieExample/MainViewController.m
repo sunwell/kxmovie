@@ -25,8 +25,7 @@ NSString * const KxMovieParameterDisableDeinterlacing = @"KxMovieParameterDisabl
 
 @implementation MainViewController
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         self.title = @"FFmpegPlayer";
@@ -53,8 +52,7 @@ NSString * const KxMovieParameterDisableDeinterlacing = @"KxMovieParameterDisabl
     return self;
 }
 
-- (void)loadView
-{
+- (void)loadView {
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
     self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.backgroundColor = [UIColor whiteColor];
@@ -69,8 +67,7 @@ NSString * const KxMovieParameterDisableDeinterlacing = @"KxMovieParameterDisabl
 
 - (BOOL)prefersStatusBarHidden { return YES; }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
 #ifdef DEBUG_AUTOPLAY
@@ -78,32 +75,26 @@ NSString * const KxMovieParameterDisableDeinterlacing = @"KxMovieParameterDisabl
 #endif
 }
 
-- (void)launchDebugTest
-{
-    [self tableView:self.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:4
-                                                                              inSection:1]];
+- (void)launchDebugTest {
+    [self tableView:self.tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:4 inSection:1]];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];    
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     [self reloadMovies];
     [self.tableView reloadData];
 }
 
-- (void) reloadMovies
-{
+- (void) reloadMovies {
     NSMutableArray *ma = [NSMutableArray array];
     NSFileManager *fm = [[NSFileManager alloc] init];
     NSString *folder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
@@ -164,13 +155,11 @@ NSString * const KxMovieParameterDisableDeinterlacing = @"KxMovieParameterDisabl
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 2;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     switch (section) {
         case 0:     return @"Remote";
         case 1:     return @"Local";
@@ -178,8 +167,7 @@ NSString * const KxMovieParameterDisableDeinterlacing = @"KxMovieParameterDisabl
     return @"";
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (section) {
         case 0:     return _remoteMovies.count;
         case 1:     return _localMovies.count;
@@ -187,8 +175,7 @@ NSString * const KxMovieParameterDisableDeinterlacing = @"KxMovieParameterDisabl
     return 0;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"Cell";
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
@@ -214,8 +201,7 @@ NSString * const KxMovieParameterDisableDeinterlacing = @"KxMovieParameterDisabl
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *path;
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
@@ -242,14 +228,10 @@ NSString * const KxMovieParameterDisableDeinterlacing = @"KxMovieParameterDisabl
     //parameters[KxMovieParameterMinBufferedDuration] = @(0.0f);
     //parameters[KxMovieParameterMaxBufferedDuration] = @(0.0f);
     
-//    KxMovieViewController *vc = [KxMovieViewController movieViewControllerWithContentPath:path
-//                                                                               parameters:parameters];
-//    [self presentViewController:vc animated:YES completion:nil];
-    
     VideoDetailController *vc = [[VideoDetailController alloc] init];
     vc.path = path;
     vc.params = [parameters copy];
-    [self presentViewController:vc animated:YES completion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end
